@@ -1,0 +1,24 @@
+{
+  "name": "checkcert",
+  "version": "1.0.0",
+  "description": "A simple script for sending mails, when your certificates expire.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "keywords": [
+    "tls",
+    "ssl",
+    "email",
+    "devops"
+  ],
+  "author": "Sebastian Lauber",
+  "license": "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/slauber/checkCert.git"
+  },  
+  "dependencies": {
+    "nodemailer": "^6.1.1"
+  }
+}

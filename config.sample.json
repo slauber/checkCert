@@ -1,0 +1,29 @@
+{
+    "email": {
+      "fromAddr": "John Doe <johndoe@example.com>",
+      "subject": "[checkCert] You have expiring TLS certificates",
+      "toAddr": "janedoe@example.com",
+      "header": "Hi,\n\nthe following servers have soon expiring TLS certificates:\n\n",
+      "footer": "Cheers"
+    },
+    "hosts": [
+      {
+        "host": "example.org",
+        "port": 443
+      },
+      {
+        "host": "example.com"
+      }
+    ],
+    "smtp": {
+      "auth": {
+        "user": "YOUR_SMTP_USER",
+        "pass": "YOUR_SMTP_PASSWORD"
+      },
+      "host": "YOUR_SMTP_HOST",
+      "port": 465,
+      "secure": true
+    },
+    "verbose": false,
+    "threshold": 50
+  }
