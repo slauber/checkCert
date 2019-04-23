@@ -5,11 +5,12 @@ const config = require('./config.json');
 
 const defaultOptions = {
     method: "GET",
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    ecdhCurve: 'auto'
 }
 
 function check(options) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             const certInfo = res.connection.getPeerCertificate();
             const diffTime = Math.abs(new Date(certInfo.valid_to).getTime() - new Date());
@@ -26,6 +27,9 @@ function check(options) {
             }
             resolve(dateInfo);
         })
+        req.on('error', (err) => {
+            reject(err);
+        });
         req.end();
     })
 }
@@ -46,13 +50,20 @@ async function main() {
 
         const options = { ...host, ...defaultOptions }
 
-        const dateInfo = await check(options);
-        if (dateInfo.diffDays < config.threshold) {
-            if (config.verbose) {
-                console.log(`${host.host}:${host.port} expires in ${dateInfo.diffDays} days on ${dateInfo.validTo}`);
+
+        try {
+            const dateInfo = await check(options);
+            if (dateInfo.diffDays < config.threshold) {
+                if (config.verbose) {
+                    console.log(`${options.host}:${options.port} expires in ${dateInfo.diffDays} days on ${dateInfo.validTo}`);
+                }
+                overdueCerts.push(dateInfo);
             }
-            overdueCerts.push(dateInfo);
+        } catch (e) {
+            console.error(`Check for ${options.host}:${options.port} failed.`)
+            console.error(e);
         }
+
     }
 
     if (overdueCerts.length > 0) {
@@ -82,7 +93,7 @@ async function main() {
                     console.log(info);
                 }
             } else {
-                console.err(err);
+                console.error(err);
             }
         })
     }
